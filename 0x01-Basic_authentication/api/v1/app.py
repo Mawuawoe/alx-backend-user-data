@@ -16,8 +16,9 @@ CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 
 
 auth = None
-auth_type = os.getenv('AUTH_TYPE', auth)
-if auth_type == auth:
+auth_type = getenv('AUTH_TYPE')
+
+if auth_type == 'auth':  # Adjust based on the value for AUTH_TYPE
     auth = Auth()
 
 
@@ -44,6 +45,9 @@ def Forbidden(error) -> str:
 
 @app.before_request
 def authenticate_user():
+    """
+    Handle before each request
+    """
     if auth is None:
         return
 
@@ -55,13 +59,6 @@ def authenticate_user():
     # Check if the request path requires authentication
     if not auth.require_auth(request.path, excluded_paths):
         return
-    else:
-        auth_header = auth.authorization_header(request)
-        user = auth.current_user(request)
-        if auth_header is None:
-            abort(401)
-        if user is None:
-            abort(403)
 
     # Check for authorization header; if missing, abort with 401 Unauthorized
     if auth.authorization_header(request) is None:
