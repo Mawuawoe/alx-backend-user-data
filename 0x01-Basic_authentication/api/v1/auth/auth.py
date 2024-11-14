@@ -18,12 +18,21 @@ class Auth():
         # Ensure path and excluded paths are slash-tolerant
         normalized_path = path if path.endswith('/') else path + '/'
 
+        # for ex_path in excluded_paths:
+        #     if ex_path.endswith('/'):
+        #         if normalized_path == ex_path:
+        #             return False
+        #     else:
+        #         if normalized_path == ex_path + '/':
+        #             return False
         for ex_path in excluded_paths:
-            if ex_path.endswith('/'):
-                if normalized_path == ex_path:
+            # Handle wildcard at the end of excluded path
+            if ex_path.endswith('*'):
+                if normalized_path.startswith(ex_path[:-1]):
                     return False
             else:
-                if normalized_path == ex_path + '/':
+                if normalized_path ==\
+                        (ex_path if ex_path.endswith('/') else ex_path + '/'):
                     return False
         return True
 
