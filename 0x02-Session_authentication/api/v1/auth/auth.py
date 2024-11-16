@@ -4,6 +4,7 @@ module to implement basic Authentication
 """
 from flask import request
 from typing import TypeVar, List
+import os
 
 
 class Auth():
@@ -45,3 +46,16 @@ class Auth():
     def current_user(self, request=None) -> TypeVar('User'):
         """the current_user"""
         return None
+
+    def session_cookie(self, request=None):
+        """
+        get the value of the cookie from request
+        """
+        if request is None:
+            return None
+        session_name = os.getenv("SESSION_NAME")
+
+        if not session_name:
+            return None
+
+        return request.cookies.get(session_name)
