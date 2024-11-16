@@ -60,14 +60,16 @@ def authenticate_user():
     # Define paths that do not require authentication
     excluded_paths = ['/api/v1/status/',
                       '/api/v1/unauthorized/',
-                      '/api/v1/forbidden/']
+                      '/api/v1/forbidden/',
+                      '/api/v1/auth_session/login/']
 
     # Check if the request path requires authentication
     if not auth.require_auth(request.path, excluded_paths):
         return
 
     # Check for authorization header; if missing, abort with 401 Unauthorized
-    if auth.authorization_header(request) is None:
+    if auth.authorization_header(request) is None\
+            and auth.session_cookie(request) is None:
         abort(401)
 
     # Check for current user; if None, abort with 403 Forbidden
