@@ -1,11 +1,11 @@
 """DB module
 """
 from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 
 from user import Base, User
-from sqlalchemy.exc import SQLAlchemyError
 
 
 class DB:
@@ -30,20 +30,10 @@ class DB:
         return self.__session
 
     def add_user(self, email: str, hashed_password: str) -> User:
-        """Adds a user to the database.
-
-        Args:
-            email (str): The user's email.
-            hashed_password (str): The user's hashed password.
-
-        Returns:
-            User: The User object added to the database.
+        """Add a new user to the database and return the User object.
         """
-        try:
-            new_user = User(email=email, hashed_password=hashed_password)
-            self._session.add(new_user)
-            self._session.commit()
-            return new_user
-        except SQLAlchemyError as e:
-            self._session.rollback()
-            raise e
+        new_user = User(email=email, hashed_password=hashed_password)
+        # add new user and commit to database
+        self._session.add(new_user)
+        self._session.commit()
+        return new_user
