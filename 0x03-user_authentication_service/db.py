@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 
 from user import Base, User
+from sqlalchemy.exc import SQLAlchemyError
 
 
 class DB:
@@ -29,10 +30,20 @@ class DB:
         return self.__session
 
     def add_user(self, email: str, hashed_password: str) -> User:
+        """Adds a user to the database.
+
+        Args:
+            email (str): The user's email.
+            hashed_password (str): The user's hashed password.
+
+        Returns:
+            User: The User object added to the database.
         """
-        add a user to db
-        """
-        user = user = User(email=email, hashed_password=hashed_password)
-        self._session.add(user)
-        self._session.commit()
-        return user
+        try:
+            new_user = User(email=email, hashed_password=hashed_password)
+            self._session.add(new_user)
+            self._session.commit()
+            return new_user
+        except SQLAlchemyError as e:
+            self._session.rollback()
+            raise e
