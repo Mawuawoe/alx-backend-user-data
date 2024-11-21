@@ -71,7 +71,7 @@ def logout() -> str:
 
 
 @app.route('/profile', methods=['GET'])
-def profile():
+def profile() -> str:
     """
     implementing a profile function to
     respond to GET/profile route
