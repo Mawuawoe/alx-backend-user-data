@@ -11,7 +11,7 @@ app = Flask(__name__)
 AUTH = Auth()
 
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
     """
     GET method that return
