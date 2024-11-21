@@ -56,7 +56,7 @@ def login():
 
 
 @app.route('/sessions', methods=['DELETE'])
-def logout():
+def logout() -> str:
     """
     DELETE route to implement logout
     by deleting the session data
@@ -65,8 +65,8 @@ def logout():
     user = AUTH.get_user_from_session_id(session_id)
     if not user:
         abort(403)
-    else:
-        AUTH.destroy_session(user.id)
+
+    AUTH.destroy_session(user.id)
     return redirect('/')
 
 
