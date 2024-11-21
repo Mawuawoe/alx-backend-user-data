@@ -71,17 +71,19 @@ def logout() -> str:
 
 
 @app.route('/profile', methods=['GET'])
-def profile() -> str:
+def profile():
     """
-    implementing a profile function to
-    respond to GET/profile route
+    GET /profile route: Fetch user profile
     """
     session_id = request.cookies.get('session_id')
+
+    # Check if session_id corresponds to a valid user
     user = AUTH.get_user_from_session_id(session_id)
-    if user:
-        return jsonify({"email": user.email}), 200
-    else:
-        abort(403)
+    if not user:
+        abort(403)  # Forbidden if session_id is invalid or user not found
+
+    # Respond with the user's email
+    return jsonify({"email": user.email}), 200
 
 
 if __name__ == "__main__":
